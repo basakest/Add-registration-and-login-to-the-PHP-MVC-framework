@@ -63,16 +63,12 @@ class User extends \Core\Model
             $this->errors[] = 'email format wrong';
         }
 
-        if ($this->emailExists()) {
+        if (static::emailExists($this->email)) {
             $this->errors[] = 'this email is already used';
         }
 
         if (strlen($this->password) < 6) {
             $this->errors[] = 'the length of password can\'t less than 6 characters';
-        }
-
-        if ($this->password !== $this->password_confirmation) {
-            $this->errors[] = 'password must match confirmation';
         }
 
         if (preg_match('/.*[a-z]+.*/i', $this->password) == 0) {
@@ -89,12 +85,12 @@ class User extends \Core\Model
      *
      * @return boolean true if this email is used
      */
-    public function emailExists()
+    public static function emailExists($email)
     {
         $sql = 'select * from users where email = :email';
         $db = static::getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
+        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
         return $stmt->fetch() !== false;
     }

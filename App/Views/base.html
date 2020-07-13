@@ -4,6 +4,12 @@
         <meta charset="utf-8" />
         <title>{% block title%}{% endblock%}</title>
     </head>
+    <body>
     {% block body %}
     {% endblock %}
+    <script src="/js/jquery.js"></script>
+    <script src="/js/jquery.validate.js"></script>
+    {% block footer %}
+    {% endblock %}
+    </body>
 </html>

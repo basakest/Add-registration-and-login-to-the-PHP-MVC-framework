@@ -110,8 +110,10 @@ class Router
 
                 $action = $this->params['action'];
                 $action = $this->convertToCamelCase($action);
+                
 
                 if (preg_match('/action$/i', $action) == 0) {
+                    //$action .= "Action";
                     $controller_object->$action();
                 } else {
                     throw new \Exception("Method $action in controller $controller cannot

@@ -1,5 +1,57 @@
 {% extends 'base.html' %}
+
 {% block title %}Sign up{% endblock %}
+
+{% block footer %}
+    <script src="/js/hideShowPassword.min.js"></script>
+    <script>
+        //下面有为空的验证了，所以这里不用考虑
+        //视频中返回的true和false是不是反了呢
+        $.validator.addMethod('validatePassword',
+            function(value, element, param) {
+                if (value != '') {
+                    if (value.match('/.*[a-z]+.*/i') == null) {
+                        return true;
+                    }
+                    if (value.match('/.*[0-9]+.*/') == null) {
+                        return true;
+                    }
+                }
+                return false;
+            },
+            'Must contain at least one letter and one number'
+            );
+
+        $(document).ready(function() {
+            $("#formSignup").validate({
+                rules: {
+                    username: 'required',
+                    email: {
+                        required: true,
+                        email: true,
+                        remote: '/account/validate-email'
+                    },
+                    password: {
+                        required: true,
+                        minlength: 6,
+                        validatePassword: true
+                    }
+                },
+                messages: {
+                    email: {
+                        remote: 'email already taken'
+                    }
+                } 
+            });
+
+            $('#inputPassword').hideShowPassword({
+                show: false,
+                innerToggle: 'focus'
+            });
+        });
+    </script>
+{% endblock %}
+
 {% block body %}
     <h1>Sign up</h1>
     {% if user.errors is not empty %}
@@ -10,7 +62,7 @@
             {% endfor %}
         </ul>
     {% endif %}
-    <form method="post" action="/signup/create">
+    <form method="post" action="/signup/create" id="formSignup">
         <div>
             <label for="inputName">Name:</label>
             <input type="text" name="username" id="inputName" placeholder="name" autofocus
@@ -18,18 +70,14 @@
         </div>
         <div>
             <label for="inputEmail">Email address:</label>
-            <input type="text" name="email" id="inputEmail" placeholder="email address"
+            <input type="email" name="email" id="inputEmail" placeholder="email address"
             value="{{ user.email }}" />
         </div>
         <div>
             <label for="inputPassword">Password:</label>
             <input type="password" name="password" id="inputPassword" placeholder="password" />
         </div>
-        <div>
-            <label for="inputPasswordConfirmation">Repeat password:</label>
-            <input type="password" name="password_confirmation" id="inputPasswordConfirmation"
-             placeholder="Repeat password" />
-        </div>
         <button type="submit">Sign up</button>
     </form>
 {% endblock %}
+
