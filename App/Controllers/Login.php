@@ -12,11 +12,6 @@ class Login extends \Core\Controller
         View::renderTemplate('Login/new.html');
     }
 
-    public function before()
-    {
-        return true;
-    }
-
     /**
      * user login
      *
@@ -27,9 +22,7 @@ class Login extends \Core\Controller
         $user = User::authenticate($_POST['email'], $_POST['password']);
         if ($user) {
             Auth::login($user);
-            //var_dump(isset($_SESSION['user_id']));
-            //exit();
-            $this->redirect('/');
+            $this->redirect(Auth::getReturnToPage());
             exit();
         } else {
             View::renderTemplate('Login/new.html', [
@@ -38,6 +31,11 @@ class Login extends \Core\Controller
         }
     }
 
+    /**
+     * user logout
+     *
+     * @return void
+     */
     public function destroyAction()
     {
         Auth::logout();

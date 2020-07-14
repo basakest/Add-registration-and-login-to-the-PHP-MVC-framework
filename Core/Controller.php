@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use \App\Auth;
+
 /**
  * Base controller
  *
@@ -39,7 +41,7 @@ abstract class Controller
     {
         $method = $name . 'Action';
         if (method_exists($this, $method)) {
-            if ($this->before() != false) {
+            if ($this->before() !== false) {
                 call_user_func_array([$this, $method], $args);
                 $this->after();
             } 
@@ -71,5 +73,13 @@ abstract class Controller
     public function redirect($url)
     {
         header('Location: http://' . $_SERVER['HTTP_HOST'] . $url, true, 303);
+    }
+
+    public function requireLogin()
+    {
+        if (!Auth::getUser()) {
+            Auth::rememberRequestedPage();
+            $this->redirect('/login');
+        }
     }
 }

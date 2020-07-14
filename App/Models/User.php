@@ -108,6 +108,23 @@ class User extends \Core\Model
     }
 
     /**
+     * get current user by id
+     *
+     * @param [int] $id
+     * @return object current user
+     */
+    public static function findById($id)
+    {
+        $sql = 'select * from users where id = :id';
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        $stmt->execute();
+        return $stmt->fetch();
+    }
+
+    /**
      * authenticate the user
      *
      * @param [string] $email

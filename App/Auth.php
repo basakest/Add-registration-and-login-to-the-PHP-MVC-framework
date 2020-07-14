@@ -1,6 +1,8 @@
 <?php
 namespace App;
 
+use \App\Models\User;
+
 class Auth
 {
     /**
@@ -40,12 +42,29 @@ class Auth
     }
 
     /**
-     * judge if the user has logged in
+     * remember the request page
      *
-     * @return boolean
+     * @return void
      */
-    public static function isLoggedIn()
+    public static function rememberRequestedPage()
     {
-        return isset($_SESSION['user_id']);
+        $_SESSION['return_to'] = $_SERVER['REQUEST_URI'];
+    }
+
+    /**
+     * get the page to retrun or / 
+     *
+     * @return void
+     */
+    public static function getReturnToPage()
+    {
+        return $_SESSION['return_to'] ?? '/';
+    }
+
+    public static function getUser()
+    {
+        if (isset($_SESSION['user_id'])) {
+            return User::findById($_SESSION['user_id']);
+        }
     }
 }
