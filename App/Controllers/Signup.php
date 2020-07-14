@@ -15,7 +15,7 @@ class Signup extends \Core\Controller
     public function createAction() {
         $user = new User($_POST);
         if ($user->save()) {
-            header("Location: http://" . $_SERVER['HTTP_HOST'] . "/signup/success", true, 303);
+            $this->redirect('/signup/success');
             exit();
         } else {
             View::renderTemplate('Signup/new.html', [

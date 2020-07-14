@@ -18,7 +18,7 @@ class User extends \Core\Model
      *
      * @param [array] $data
      */
-    public function __construct($data)
+    public function __construct($data = [])
     {
         foreach ($data as $i => $v) {
             $this -> $i = $v;
@@ -87,11 +87,40 @@ class User extends \Core\Model
      */
     public static function emailExists($email)
     {
+        return static::findByEmail($email) != false;
+    }
+
+    /**
+     * get the object about an user based on the email
+     *
+     * @param [string] $email
+     * @return [object] the user object
+     */
+    public static function findByEmail($email)
+    {
         $sql = 'select * from users where email = :email';
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
         $stmt->execute();
-        return $stmt->fetch() !== false;
+        return $stmt->fetch();
+    }
+
+    /**
+     * authenticate the user
+     *
+     * @param [string] $email
+     * @param [string] $password
+     * @return [object] the user object
+     */
+    public static function authenticate($email, $password)
+    {
+        $user = static::findByEmail($email);
+        if ($user) {
+            if (password_verify($password, $user->password_hash)) {
+                return $user;
+            }
+        }
     }
 }
