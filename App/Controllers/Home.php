@@ -15,14 +15,4 @@ class Home extends \Core\Controller
 
         View::renderTemplate('Home/index.html');
     }
-
-    protected function before()
-    {
-        return true;
-    }
-
-    protected function after()
-    {
-        
-    }
 }

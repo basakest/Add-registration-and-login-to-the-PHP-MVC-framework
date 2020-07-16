@@ -28,14 +28,4 @@ class Signup extends \Core\Controller
     {
         View::renderTemplate('Signup/success.html');
     }
-
-    protected function before()
-    {
-        return true;
-    }
-
-    protected function after()
-    {
-        
-    }
 }

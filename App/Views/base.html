@@ -1,15 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>{% block title%}{% endblock%}</title>
-    </head>
-    <body>
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title%}{% endblock%}</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+    {% for message in flash_messages %}
+        <div class="alert alert-{{ message.type }}">
+            <p>{{ message.body }}</p>
+        </div>
+    {% endfor %}
+
     {% block body %}
     {% endblock %}
+
     <script src="/js/jquery.js"></script>
     <script src="/js/jquery.validate.js"></script>
+
     {% block footer %}
     {% endblock %}
-    </body>
+</body>
 </html>
