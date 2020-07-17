@@ -2,6 +2,7 @@
 namespace App;
 
 use \App\Models\User;
+use \App\Models\RememberedLogin;
 
 class Auth
 {
@@ -11,10 +12,15 @@ class Auth
      * @param [object] $user
      * @return void
      */
-    public static function login($user)
+    public static function login($user, $remember_me)
     {
         session_regenerate_id(true);
         $_SESSION['user_id'] = $user->id;
+        if ($remember_me) {
+            if ($user->rememberLogin()) {
+                setcookie('remember_me', $user->remember_token, $user->expiry_timestamp, '/');
+            }
+        }
     }
 
     /**
@@ -39,6 +45,7 @@ class Auth
 
         // Finally, destroy the session.
         session_destroy();
+        static::forgetLogin();
     }
 
     /**
@@ -65,6 +72,48 @@ class Auth
     {
         if (isset($_SESSION['user_id'])) {
             return User::findById($_SESSION['user_id']);
+        } else {
+            //echo 123;
+            //exit();
+            return static::loginFromRememberCookie();
+        }
+    }
+
+    /**
+     * login by the token cookie
+     *
+     * @return object the user object
+     */
+    public static function loginFromRememberCookie()
+    {
+        $cookie = $_COOKIE['remember_me'] ?? false;
+        //var_dump($cookie);
+        //exit();
+        if ($cookie) {
+            $remembered_login = RememberedLogin::findByToken($cookie);
+            if ($remembered_login && !$remembered_login->hasExpired()) {
+                $user = $remembered_login->getUser();
+                static::login($user, false);
+                return $user;
+            }
+        }
+    }
+
+    /**
+     * delete the cookie and the record in database
+     *
+     * @return void
+     */
+    protected static function forgetLogin()
+    {
+        $cookie = $_COOKIE['remember_me'] ?? false;
+        if ($cookie) {
+            //echo 333;exit();
+            $remembered_login = RememberedLogin::findByToken($cookie);
+            if ($remembered_login) {
+                $remembered_login->delete();
+            }
+            setcookie('remember_me', '', time() - 3600);
         }
     }
 }

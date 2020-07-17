@@ -17,4 +17,6 @@ class Config
 
     const SHOW_ERRORS = true;
 
+    const SECRET_KEY = 'Zh5M5BCn77jOnhNqw2eS8evi6TUIfGno';
+
 }

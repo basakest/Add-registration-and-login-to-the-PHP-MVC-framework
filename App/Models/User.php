@@ -1,6 +1,7 @@
 <?php 
 namespace App\Models;
 use PDO;
+use \App\Token;
 
 /**
  * the User class
@@ -139,5 +140,26 @@ class User extends \Core\Model
                 return $user;
             }
         }
+    }
+
+    /**
+     * insert a record to remembered_login table
+     *
+     * @return boolean
+     */
+    public function rememberLogin()
+    {
+        $token = new Token();
+        $hashed_token = $token->getHash();
+        $this->remember_token = $token->getValue();
+        $this->expiry_timestamp = time() + 60 * 60 * 24 * 30;
+        $sql = "insert into remembered_logins(token_hash, user_id, expires_at)
+                values(:token_hash, :user_id, :expires_at)";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':token_hash', $hashed_token, PDO::PARAM_STR);
+        $stmt->bindValue(':user_id', $this->id, PDO::PARAM_INT);
+        $stmt->bindValue(':expires_at', date('Y-m-d H:i:s', $this->expiry_timestamp), PDO::PARAM_STR);
+        return $stmt->execute();
     }
 }
