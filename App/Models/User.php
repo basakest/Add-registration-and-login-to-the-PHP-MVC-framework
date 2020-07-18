@@ -39,14 +39,18 @@ class User extends \Core\Model
     {
         $this->validate();
         if (empty($this->errors)) {
+            $token = new Token();
+            $this->activation_token = $token->getValue();
+            $hashed_token = $token->getHash();
             $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
             $db = static::getDB();
-            $sql = "insert into users(username ,email, password_hash)
-                    values (:username, :email, :password_hash)";
+            $sql = "insert into users(username ,email, password_hash, activation_hash)
+                    values (:username, :email, :password_hash, :activation_hash)";
             $stmt = $db->prepare($sql);
             $stmt->bindValue(':username', $this->username, PDO::PARAM_STR);
             $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
             $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
+            $stmt->bindValue(':activation_hash', $hashed_token, PDO::PARAM_STR);
             return $stmt->execute();
         }
         return false;
@@ -145,7 +149,7 @@ class User extends \Core\Model
     public static function authenticate($email, $password)
     {
         $user = static::findByEmail($email);
-        if ($user) {
+        if ($user && $user->is_active) {
             if (password_verify($password, $user->password_hash)) {
                 return $user;
             }
@@ -269,5 +273,39 @@ class User extends \Core\Model
             return $stmt->execute();
         }
         return false;
+    }
+
+    /**
+     * Send the active email to user
+     *
+     * @return void
+     */
+    public function sendActivationEmail()
+    {
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/signup/activate/' . 
+            $this->activation_token;
+        //$text = View::getTemplate('Password/reset_email.txt', ['url' => $url]);
+        $html = View::getTemplate('Password/activation_email.html', ['url' => $url]);
+        Mail::send($this->email, 'activation account', $html);
+    }
+
+    /**
+     * active the user
+     *
+     * @param [string] $value
+     * @return void
+     */
+    public static function active($value)
+    {
+        $token = new Token($value);
+        $hashed_token = $token->getHash();
+        $db = static::getDB();
+        $sql = "update users
+                set is_active = 1,
+                    activation_hash = null
+                where activation_hash = :hashed_token";
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':hashed_token', $hashed_token, PDO::PARAM_STR);
+        $stmt->execute();
     }
 }

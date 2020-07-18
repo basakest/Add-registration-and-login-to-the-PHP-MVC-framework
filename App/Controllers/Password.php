@@ -54,7 +54,7 @@ class Password extends \Core\Controller
      * get the user by token or show error message
      *
      * @param [string] $token
-     * @return void
+     * @return [object]
      */
     protected function getUserOrExit($token)
     {
