@@ -26,7 +26,26 @@ class View
         }
     }
 
+    /**
+     * render a template with args
+     *
+     * @param [text] $template
+     * @param array $args
+     * @return void
+     */
     public static function renderTemplate($template, $args = [])
+    {
+        echo static::getTemplate($template, $args);
+    }
+
+    /**
+     * get a template with args
+     *
+     * @param [string] $template
+     * @param array $args
+     * @return void
+     */
+    public static function getTemplate($template, $args = [])
     {
         static $twig = null;
         if ($twig == null) {
@@ -35,6 +54,6 @@ class View
             $twig->addGlobal('current_user', \App\Auth::getUser());
             $twig->addGlobal('flash_messages', \App\Flash::getMessages());
         }
-        echo $twig->render($template, $args);
+        return $twig->render($template, $args);
     }
 }

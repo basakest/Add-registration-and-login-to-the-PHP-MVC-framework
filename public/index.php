@@ -28,6 +28,7 @@ $router->add('', ['controller' => 'Home', 'action' => 'index']);
 $router->add('{controller}/{action}');
 $router->add('login', ['controller' => 'login', 'action' => 'new']);
 $router->add('logout', ['controller' => 'login', 'action' => 'sestroy']);
+$router->add('password/reset/{token:[\da-f]+}', ['controller' => 'password', 'action' => 'reset']);
 //don't add / before admin
 //$router ->add('admin/{controller}/{action}', ['namespace' => 'Admin']);
 
