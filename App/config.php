@@ -19,8 +19,14 @@ class Config
 
     const SECRET_KEY = 'Zh5M5BCn77jOnhNqw2eS8evi6TUIfGno';
 
-    const MAILGUN_API_KEY = 'f02278a401568103d780ede9f40d4458-a83a87a9-c62db092';
+    //const MAILGUN_API_KEY = 'f02278a401568103d780ede9f40d4458-a83a87a9-c62db092';
 
-    const MAILGUN_DOMAIN = 'sandbox739b0c9952404b19a0274d8fd4f5146d.mailgun.org';
+    //const MAILGUN_DOMAIN = 'sandbox739b0c9952404b19a0274d8fd4f5146d.mailgun.org';
+
+    const EMAIL_HOST = 'smtp.qq.com';
+
+    const EMAIL_USER = '1652759879@qq.com';
+
+    const EMAIL_PWD = 'ruxkbywvmwheefbb';
 
 }
