@@ -5,21 +5,22 @@
 {% block body %}
     <h1>Login</h1>
     <form action="/login/create" method="post">
-        <div>
+        <div class="form-group">
             <label for="inputEmail">Email:</label>
-            <input type="email" name="email" id="inputEmail" value="{{ email }}" />
+            <input type="email" name="email" id="inputEmail" value="{{ email }}"
+            class="form-control" />
         </div>
-        <div>
+        <div class="form-group">
             <label for="inputPassword">Password:</label>
-            <input type="password" name="password" id="inputPassword">
+            <input type="password" name="password" id="inputPassword" class="form-control">
         </div>
-        <div>
+        <div class="form-check">
             <label>
                 <input type="checkbox" name="remember_me"  {% if remember_me %} 
-                checked = 'checked'{% endif %} />Remember me
+                checked = 'checked'{% endif %} class="form-check-input" />Remember me
             </label>
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" class="btn btn-primary">Login</button>
         <a href="/password/forgot">Forgot password?</a>
     </form>
 {% endblock %}

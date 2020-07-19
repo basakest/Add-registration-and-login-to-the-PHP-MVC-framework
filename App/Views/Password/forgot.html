@@ -3,11 +3,11 @@
 {% block body %}
     <h1>Password reset</h1>
     <form action="/password/request-reset" method="post">
-        <div>
+        <div class="form-group">
             <label for="inputEmail">Email:</label>
             <input type="email" name="email" id="inputEmail" placeholder="Email address" 
-                autofocus required />
+                autofocus required class="form-control" />
         </div>
-        <button type="submit">Send password reset</button>
+        <button type="submit" class="btn btn-primary">Send password reset</button>
     </form>
 {% endblock %}

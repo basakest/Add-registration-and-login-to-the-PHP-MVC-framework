@@ -54,23 +54,23 @@
         </ul>
     {% endif %}
     <form method="post" action="/profile/update" id="formProfile">
-        <div>
+        <div class="form-group">
             <label for="inputName">Name:</label>
             <input type="text" name="username" id="inputName" placeholder="name" 
-            value="{{ user.username }}" />
+            value="{{ user.username }}" class="form-control" />
         </div>
-        <div>
+        <div class="form-group">
             <label for="inputEmail">Email address:</label>
             <input type="email" name="email" id="inputEmail" placeholder="email address"
-            value="{{ user.email }}" />
+            value="{{ user.email }}" class="form-control" />
         </div>
-        <div>
+        <div class="form-group">
             <label for="inputPassword">Password:</label>
             <input type="password" name="password" id="inputPassword" placeholder="password"
-                    aria-describedby="helpBlock" />
-            <span id="helpBlock">Leave blank to keep current password</span>
+                    aria-describedby="helpBlock" class="form-control" />
+            <span id="helpBlock" class="help-block">Leave blank to keep current password</span>
         </div>
-        <button type="submit">Save</button>
+        <button type="submit" class="btn btn-primary">Save</button>
     </form>
 {% endblock %}
 
